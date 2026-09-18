@@ -41,7 +41,7 @@ export default function RecentProjects() {
             </h2>
           </div>
 
-          {/* View All Projects Link */}
+          
           <a
             href="#projects"
             className="mt-4 sm:mt-0 text-blue-500 hover:text-blue-400 font-bold text-xs tracking-wider uppercase flex items-center gap-2 transition-colors duration-300 group"
