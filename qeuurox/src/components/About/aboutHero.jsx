@@ -1,14 +1,51 @@
 import React from "react";
+// import SideRays from "../SideRays";
+import BlurText from "../BlurText";
+import TextType from "../TextType";
+import { motion } from "motion/react";
+import SpecularButton from '../SpecularButton';
+import LightRays from '../LightRays';
+const headingClass =
+  "text-[48px] font-medium uppercase leading-[1.06] tracking-[-0.035em] sm:text-[58px] md:text-[64px] lg:text-[67px] xl:text-[72px]";
 
 const AboutHero = () => {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#02050a] text-white">
+    <section className="relative min-h-screen overflow-hidden text-white border-b border-blue-500/70 shadow-[0_1px_25px_rgba(59,130,246,0.55)]">
 
       {/* =========================================
-          BACKGROUND ATMOSPHERE
+          SIDE RAYS WEBGL EFFECT
       ========================================== */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(0,102,255,0.08),transparent_35%)]" />
-      <div className="absolute right-[10%] top-[20%] h-[500px] w-[500px] rounded-full bg-blue-600/[0.04] blur-[150px]" />
+      <div className="absolute inset-0 z-[1]">
+        {/* <SideRays
+          origin="top-right"
+          rayColor1="#2563eb"
+          rayColor2="#60a5fa"
+          intensity={2}
+          spread={2.2}
+          speed={1.8}
+          tilt={0}
+          saturation={1.4}
+          blend={0.7}
+          falloff={1.6}
+          opacity={0.85}
+        /> */}
+
+        <LightRays
+          raysOrigin="bottom-center"
+          raysColor="#3b82f6"
+          raysSpeed={1.2}
+          lightSpread={0.8}
+          rayLength={1.4}
+          pulsating={false}
+          fadeDistance={1.0}
+          saturation={1.2}
+          followMouse={true}
+          mouseInfluence={0.12}
+          noiseAmount={0.05}
+          distortion={0.05}
+          
+        />
+      </div>
 
 
       {/* =========================================
@@ -38,123 +75,112 @@ const AboutHero = () => {
           ====================================== */}
           <div className="relative z-20 max-w-[620px]">
 
-            <div className="mb-6 flex items-center gap-3">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-blue-500">
-                WHO WE ARE
-              </span>
-              <span className="h-[1px] w-10 bg-blue-500" />
+            <div className=" flex items-center gap-3">
+              
+              <motion.div
+  animate={{ opacity: 1, y: 0 }}
+  initial={{ opacity: 0, y: 16 }}
+  transition={{
+    duration: 0.9,
+    delay: 0.56,
+    ease: "easeOut",
+  }}
+  // className="mx-auto max-w-[60ch]"
+>
+<TextType
+  text="WHO WE ARE"
+  typingSpeed={30}
+  pauseDuration={3000}
+  loop={false}
+  showCursor={true}
+  cursorCharacter="|"
+  cursorClassName="text-emerald-300"
+  className="text-[1rem] leading-relaxed text-blue-500"
+/>
+</motion.div>
             </div>
 
-            <h1
-              className="
-                text-[48px]
-                font-medium
-                uppercase
-                leading-[1.06]
-                tracking-[-0.035em]
-                sm:text-[58px]
-                md:text-[64px]
-                lg:text-[67px]
-                xl:text-[72px]
-              "
-            >
-              WE TURN
-              <br />
-              COMPLEX IDEAS
-              <br />
-              INTO{" "}
-              <span className="text-blue-500">DIGITAL</span>
-              <br />
-              <span className="text-blue-500">PRODUCTS.</span>
-            </h1>
-
-            <p
-              className="
-                mt-8
-                max-w-[470px]
-                text-sm
-                leading-7
-                text-zinc-400
-                sm:text-[15px]
-              "
-            >
-              At qeuurox, we blend creativity, technology
-              and strategy to build digital solutions that
-              help businesses grow, scale and lead.
-            </p>
-
-            <div className="mt-9">
-              <a
-                href="#story"
-                className="
-                  group
-                  inline-flex
-                  items-center
-                  gap-5
-                  border
-                  border-blue-600
-                  bg-blue-600/[0.03]
-                  px-6
-                  py-3.5
-                  text-[11px]
-                  font-semibold
-                  uppercase
-                  tracking-[0.15em]
-                  text-blue-500
-                  transition-all
-                  duration-300
-                  hover:bg-blue-600
-                  hover:text-white
-                  hover:shadow-[0_0_35px_rgba(37,99,235,0.35)]
-                "
-              >
-                DISCOVER OUR STORY
-                <span className="text-lg transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
-              </a>
-            </div>
-
-          </div>
-
-          {/* =====================================
-              RIGHT Q VISUAL + BLUE GLOW BEHIND
-          ====================================== */}
-          <div className="relative flex min-h-[520px] items-center justify-center lg:min-h-[650px]">
-
-            {/* ----- BLUE GLOW (behind the image) ----- */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div
-                className="
-                  h-[250px] w-[250px]
-                  sm:h-[350px] sm:w-[350px]
-                  md:h-[420px] md:w-[420px]
-                  lg:h-[500px] lg:w-[500px]
-                  xl:h-[600px] xl:w-[600px]
-                  rounded-full
-                  bg-blue-900/20
-                  blur-[120px]
-                "
+            <div>
+              <BlurText
+                text="WE TURN"
+                className={headingClass}
+                animateBy="words"
+                direction="top"
+                delay={80}
+              />
+              <BlurText
+                text="COMPLEX IDEAS"
+                className={headingClass}
+                animateBy="words"
+                direction="top"
+                delay={80}
+              />
+              <div className="flex flex-wrap items-baseline gap-x-3">
+                <BlurText
+                  text="INTO"
+                  className={headingClass}
+                  animateBy="words"
+                  direction="top"
+                  delay={80}
+                />
+                <BlurText
+                  text="DIGITAL"
+                  className={`${headingClass} text-blue-500`}
+                  animateBy="words"
+                  direction="top"
+                  delay={80}
+                />
+              </div>
+              <BlurText
+                text="PRODUCTS."
+                className={`${headingClass} text-blue-500`}
+                animateBy="words"
+                direction="top"
+                delay={80}
               />
             </div>
 
-            {/* ----- YOUR TRANSPARENT PNG ----- */}
-            <img
-              src="/aboutHero.png"
-              alt="QEUUROX 3D Logo"
-              className="
-                relative
-                z-10
-                w-[360px]
-                sm:w-[450px]
-                md:w-[500px]
-                lg:w-[560px]
-                xl:w-[650px]
-                max-w-none
-                object-contain
-                animate-q-float
-              "
-            />
+            
+            <motion.div
+  animate={{ opacity: 1, y: 0 }}
+  initial={{ opacity: 0, y: 16 }}
+  transition={{
+    duration: 0.9,
+    delay: 0.56,
+    ease: "easeOut",
+  }}
+  className="mx-auto max-w-[60ch]"
+>
+<TextType
+  text="At qeuurox, we blend creativity, technology and strategy to build digital solutions that help businesses grow, scale and lead."
+  typingSpeed={30}
+  pauseDuration={3000}
+  loop={false}
+  showCursor={true}
+  cursorCharacter="|"
+  cursorClassName="text-emerald-300"
+  className="text-[clamp(0.9rem,1.4vw,1.25rem)] leading-relaxed text-white/70"
+/>
+</motion.div>
+
+              <div className="mt-9">
+              <SpecularButton
+                size="lg"
+                radius={4}
+                lineColor="#3b82f6"
+                baseColor="#0cc6f5"
+                textColor="#1e5dbd"
+                intensity={1.2}
+                onClick={() => {
+                  document.querySelector("#story")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="uppercase tracking-[0.15em] !text-[11px] font-semibold border border-blue-600"
+              >
+                DISCOVER OUR STORY →
+              </SpecularButton>
+            </div>
+
+
           </div>
 
         </div>
