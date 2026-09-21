@@ -1,3 +1,5 @@
+
+
 /**
  * @name: FlowField
  * @description: Canvas particle flow field background — organic noise-driven streams of glowing light.
@@ -16,11 +18,6 @@ import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 import DepthText from "../DepthText";
 import TextType from "../TextType";
-import Galaxy from '../Galaxy';
-
-
-
-
 
 
 // ─── Utils ────────────────────────────────────────────────────────────────────
@@ -144,7 +141,7 @@ function DefaultContent() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export default function FlowaField({
+export default function ContactHero({
   className,
   children,
   theme = "aurora",
