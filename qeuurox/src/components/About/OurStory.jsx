@@ -1,5 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, createRef } from 'react';
 import { Rocket, Code, Users, Target, ArrowRight } from 'lucide-react';
+import LightRays from '../LightRays';
+import VariableProximity from '../VariableProximity';
+import TrueFocus from '../TrueFocus';
+import TextType from '../TextType';
 
 const timelineSteps = [
   {
@@ -32,9 +36,11 @@ const timelineSteps = [
   },
 ];
 
-const OurStory = () => {
+const OurStory2 = () => {
   const leftRef = useRef(null);
   const itemRefs = useRef([]);
+  const headingRef = useRef(null);
+  const stepRefs = useRef(timelineSteps.map(() => createRef())).current;
 
   useEffect(() => {
     const observerOptions = {
@@ -77,34 +83,87 @@ const OurStory = () => {
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Light rays WebGL background */}
+      <div className="absolute inset-0 z-[1] opacity-60">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#3b82f6"
+          raysSpeed={1.2}
+          lightSpread={0.8}
+          rayLength={1.4}
+          pulsating={false}
+          fadeDistance={1.0}
+          saturation={1.2}
+          followMouse={true}
+          mouseInfluence={0.12}
+          noiseAmount={0.05}
+          distortion={0.05}
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start w-full relative z-10">
         {/* Left Content */}
         <div
           ref={leftRef}
           className="lg:col-span-5 space-y-7 pt-2 stagger-children"
         >
-          <div className="flex items-center gap-3 text-blue-400 font-semibold text-[11px] tracking-[0.2em] uppercase">
-            <span>Our Story</span>
-            <span className="w-10 h-[2px] bg-blue-500/70 rounded-full" />
+          <div className="-mx-1">
+            <TrueFocus
+              sentence="Our Story"
+              borderColor="#3b82f6"
+              glowColor="rgba(59, 130, 246, 0.6)"
+              animationDuration={0.5}
+              pauseBetweenAnimations={1}
+            />
           </div>
 
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1]">
-            A JOURNEY OF
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500">
-              INNOVATION
-            </span>
+          <h2
+            ref={headingRef}
+            className="text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] -ml-1"
+          >
+            <VariableProximity
+              label="A JOURNEY OF"
+              className="text-white"
+              style={{ display: 'block' }}
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 900, 'opsz' 40"
+              containerRef={headingRef}
+              radius={120}
+              falloff="linear"
+            />
+            <VariableProximity
+              label="INNOVATION"
+              className="text-blue-400"
+              style={{ display: 'block' }}
+              fromFontVariationSettings="'wght' 400, 'opsz' 9"
+              toFontVariationSettings="'wght' 900, 'opsz' 40"
+              containerRef={headingRef}
+              radius={120}
+              falloff="linear"
+            />
           </h2>
+          <style>{`@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');`}</style>
 
           <div className="space-y-4 text-gray-400 text-sm sm:text-base leading-relaxed max-w-md">
-            <p>
-              Our journey is built on passion, dedication and a relentless
-              pursuit of excellence.
-            </p>
-            <p>
-              From a small idea to a global digital partner — we continue to
-              evolve, innovate and create impact.
-            </p>
+            <TextType
+              as="p"
+              text="Our journey is built on passion, dedication and a relentless pursuit of excellence."
+              typingSpeed={30}
+              loop={false}
+              showCursor={true}
+              cursorCharacter="|"
+              startOnVisible
+            />
+            <TextType
+              as="p"
+              text="From a small idea to a global digital partner — we continue to evolve, innovate and create impact."
+              typingSpeed={30}
+              initialDelay={2200}
+              loop={false}
+              showCursor={true}
+              cursorCharacter="|"
+              startOnVisible
+            />
           </div>
 
           <div className="pt-2">
@@ -120,6 +179,10 @@ const OurStory = () => {
           {/* Vertical connecting line */}
           <div className="absolute left-[23px] top-8 bottom-8 w-[2px] bg-gradient-to-b from-blue-600 via-blue-400 to-blue-400/10 rounded-full hidden sm:block" />
           <div className="absolute left-[23px] top-8 bottom-8 w-[2px] bg-gradient-to-b from-blue-600 via-blue-400 to-blue-400/10 rounded-full sm:hidden" />
+          {/* Traveling light that sweeps down the line */}
+          <div className="absolute left-[23px] top-8 bottom-8 w-[2px] pointer-events-none">
+            <span className="timeline-travel-light" />
+          </div>
 
           <div className="space-y-10 relative">
             {timelineSteps.map((step, index) => {
@@ -134,23 +197,47 @@ const OurStory = () => {
                 >
                   {/* Icon + Dot */}
                   <div className="relative flex flex-col items-center flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full border border-blue-500/30 bg-[#020617] flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.1)] group-hover:border-blue-400 group-hover:shadow-[0_0_30px_rgba(37,99,235,0.2)] transition-all duration-300 z-10">
+                    <div
+                      className="icon-circle w-12 h-12 rounded-full border border-blue-500/30 bg-[#020617] flex items-center justify-center text-white shadow-[0_0_20px_rgba(37,99,235,0.1)] group-hover:border-blue-400 group-hover:shadow-[0_0_30px_rgba(37,99,235,0.2)] transition-all duration-300 z-10"
+                      style={{ animationDelay: `${(index * 1.05 + 0.2).toFixed(2)}s` }}
+                    >
                       <IconComponent className="w-5 h-5 stroke-[1.5]" />
                     </div>
                     <div className="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-[0_0_12px_#3b82f6,0_0_24px_#3b82f6] absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20" />
                   </div>
 
                   {/* Text */}
-                  <div className="flex-1 pt-1">
-                    <span className="text-blue-400 font-extrabold text-2xl tracking-tight block mb-0.5 transition-colors duration-300">
-                      {step.year}
-                    </span>
-                    <h3 className="text-white font-semibo   ld text-lg mb-1 transition-colors duration-300">
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
-                      {step.description}
-                    </p>
+                  <div className="flex-1 pt-1" ref={stepRefs[index]}>
+                    <VariableProximity
+                      label={step.year}
+                      className="text-blue-400 font-extrabold text-2xl tracking-tight mb-0.5 transition-colors duration-300"
+                      style={{ display: 'block' }}
+                      fromFontVariationSettings="'wght' 400, 'opsz' 9"
+                      toFontVariationSettings="'wght' 900, 'opsz' 40"
+                      containerRef={stepRefs[index]}
+                      radius={90}
+                      falloff="linear"
+                    />
+                    <VariableProximity
+                      label={step.title}
+                      className="text-white font-semibold text-lg mb-1 transition-colors duration-300"
+                      style={{ display: 'block' }}
+                      fromFontVariationSettings="'wght' 400, 'opsz' 9"
+                      toFontVariationSettings="'wght' 900, 'opsz' 40"
+                      containerRef={stepRefs[index]}
+                      radius={90}
+                      falloff="linear"
+                    />
+                    <TextType
+                      as="p"
+                      text={step.description}
+                      className="text-gray-400 text-sm leading-relaxed max-w-md transition-colors duration-300"
+                      typingSpeed={25}
+                      loop={false}
+                      showCursor={true}
+                      cursorCharacter="|"
+                      startOnVisible
+                    />
                   </div>
                 </div>
               );
@@ -209,9 +296,69 @@ const OurStory = () => {
         .timeline-item:hover .text-gray-400 {
           color: #9ca3af;
         }
+
+        /* Light that travels down the connecting line, top to bottom */
+        .timeline-travel-light {
+          position: absolute;
+          left: 50%;
+          top: -12%;
+          transform: translateX(-50%);
+          width: 5px;
+          height: 60px;
+          border-radius: 9999px;
+          background: linear-gradient(to bottom, transparent, #93c5fd, #3b82f6, transparent);
+          filter: blur(1px);
+          box-shadow: 0 0 8px 2px rgba(59, 130, 246, 0.45), 0 0 16px 5px rgba(59, 130, 246, 0.18);
+          animation: travelDown 4.5s linear infinite;
+        }
+
+        @keyframes travelDown {
+          0% {
+            top: -12%;
+            opacity: 0;
+          }
+          8% {
+            opacity: 1;
+          }
+          92% {
+            opacity: 1;
+          }
+          100% {
+            top: 100%;
+            opacity: 0;
+          }
+        }
+
+        /* Icon circle briefly lights up as the traveling light passes, then returns to black */
+        .icon-circle {
+          background-color: #020617;
+          border-color: rgba(59, 130, 246, 0.3);
+          animation: circleGlow 4.5s ease-in-out infinite;
+        }
+
+        @keyframes circleGlow {
+          0%,
+          12%,
+          100% {
+            background-color: #020617;
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+          }
+          19%,
+          23% {
+            background-color: #2563eb;
+            border-color: #93c5fd;
+            box-shadow: 0 0 18px 3px rgba(59, 130, 246, 0.45);
+          }
+          30% {
+            background-color: #020617;
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);
+          }
+        }
       `}</style>
     </section>
   );
 };
 
-export default OurStory;
+export default OurStory2;
