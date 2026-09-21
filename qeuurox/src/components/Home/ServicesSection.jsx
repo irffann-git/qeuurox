@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import StrokeText from '../StrokeText';
 
 export default function ServicesSection() {
   const [activeIndex, setActiveIndex] = useState(2);
@@ -130,14 +131,28 @@ export default function ServicesSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-blue-600/10 blur-[140px] pointer-events-none rounded-full" />
 
       {/* Header Title */}
-      <div className="text-center mb-16 relative z-10">
-        <span className="text-blue-500 tracking-widest text-xs font-bold uppercase">
+      <div className="text-center mb-1 relative z-10">
+        <span className="text-blue-500 tracking-widest text-md font-bold uppercase">
           WHAT WE DO
         </span>
-        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
-          Our Services
-        </h2>
-        <div className="w-12 h-[3px] bg-blue-600 mx-auto mt-3 rounded-full" />
+        
+<StrokeText
+  text="Our Services"
+  strokeColor="#0c479f"
+  fillColor="#a7aaaf"
+  strokeWidth={2}
+  drawDuration={2}
+  fillDelay={1}
+  stagger={0.15}
+  ease="power2.out"
+  trigger="mount"
+  fillMode="wipe"
+  fontSize={100}
+  fontWeight={800}
+  letterSpacing={-4}
+  reverse={false}
+/>
+        {/* <div className="w-12 h-[3px] bg-blue-600 mx-auto mt-3 rounded-full" /> */}
       </div>
 
       {/* CAROUSEL CONTAINER */}

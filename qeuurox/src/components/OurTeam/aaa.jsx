@@ -253,46 +253,61 @@ export default function FlowaField({
 
   const bgColor = THEMES[theme].bg;
 
-  return (
-   <div
-  className={cn(
-    "relative flex min-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] mx-auto my-4 items-center justify-center overflow-hidden rounded-[32px]",
-    className
-  )}
-  style={{ background: `rgb(${bgColor})` }}
->
-      <canvas
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        ref={canvasRef}
-      />
+ return (
+  <div
+    className={cn(
+      "relative flex min-h-screen w-full items-center justify-center overflow-hidden",
+      className
+    )}
+    style={{ background: `rgb(${bgColor})` }}
+  >
+    <canvas
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      ref={canvasRef}
+    />
 
-      {/* Radial vignette — focuses center, dims edges */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse 65% 60% at 50% 50%, transparent 20%, rgba(${bgColor}, 0.92) 100%)`,
-        }}
-      />
+    {/* Radial vignette — focuses center, dims edges */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background: `radial-gradient(
+          ellipse 65% 60% at 50% 50%,
+          transparent 20%,
+          rgba(${bgColor}, 0.92) 100%
+        )`,
+      }}
+    />
 
-      {/* Soft top / bottom fades */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-40"
-        style={{
-          background: `linear-gradient(to bottom, rgb(${bgColor}), transparent)`,
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
-        style={{
-          background: `linear-gradient(to top, rgb(${bgColor}), transparent)`,
-        }}
-      />
+    {/* Soft top fade */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 h-40"
+      style={{
+        background: `linear-gradient(
+          to bottom,
+          rgb(${bgColor}),
+          transparent
+        )`,
+      }}
+    />
 
-      {children ?? <DefaultContent />}
-    </div>
-  );
+    {/* Soft bottom fade */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
+      style={{
+        background: `linear-gradient(
+          to top,
+          rgb(${bgColor}),
+          transparent
+        )`,
+      }}
+    />
+
+    {/* Content */}
+    {children ?? <DefaultContent />}
+  </div>
+);
 }

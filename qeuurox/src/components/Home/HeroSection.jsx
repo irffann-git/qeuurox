@@ -1,183 +1,313 @@
-import React from 'react';
+/**
+ * @name: FlowField
+ * @description: Canvas particle flow field background — organic noise-driven streams of glowing light.
+ * @version: 1.0.0
+ * @author: @dorian_baffier
+ * @license: MIT
+ * @website: https://kokonutui.com
+ * @github: https://github.com/kokonut-labs/kokonutui
+ *
+ * JavaScript (JSX) port.
+ * If you use framer-motion v11 or older, change the import below to:
+ *   import { motion } from "framer-motion";
+ */
 
-export default function HeroSection() {
-  // Extreme disarranged / scattered laser rays configuration
-  const laserRays = [
-    { left: '95%', top: '-20%', angle: '52deg', width: '2px', height: '650px', opacity: 0.7, speed: '4.5s', delay: '0s' },
-    { left: '82%', top: '10%', angle: '-35deg', width: '3px', height: '480px', opacity: 0.35, speed: '6s', delay: '1.2s' },
-    { left: '74%', top: '-30%', angle: '65deg', width: '1px', height: '700px', opacity: 0.5, speed: '3.5s', delay: '2.5s' },
-    { left: '62%', top: '-5%', angle: '-18deg', width: '2.5px', height: '550px', opacity: 0.6, speed: '5s', delay: '0.8s' },
-    { left: '50%', top: '-25%', angle: '48deg', width: '4px', height: '600px', opacity: 0.25, speed: '7s', delay: '3.1s' },
-    { left: '42%', top: '15%', angle: '-42deg', width: '1px', height: '500px', opacity: 0.65, speed: '4.2s', delay: '1.7s' },
-    { left: '30%', top: '-35%', angle: '58deg', width: '2px', height: '750px', opacity: 0.4, speed: '5.5s', delay: '0.4s' },
-    { left: '18%', top: '5%', angle: '-25deg', width: '1.5px', height: '450px', opacity: 0.5, speed: '4.8s', delay: '2.2s' },
-    { left: '8%', top: '-15%', angle: '38deg', width: '3px', height: '580px', opacity: 0.3, speed: '6.2s', delay: '1.0s' },
-    { left: '-2%', top: '-10%', angle: '-50deg', width: '1px', height: '620px', opacity: 0.6, speed: '3.8s', delay: '2.8s' },
-  ];
+import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
+import DepthText from "../DepthText";
+import TextType from "../TextType";
+
+
+// ─── Utils ────────────────────────────────────────────────────────────────────
+
+// Tiny class-name joiner (drop this and import your own `cn` if you have one)
+function cn(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const PARTICLE_COUNTS = {
+  sparse: 600,
+  medium: 1200,
+  dense: 2000,
+};
+
+const THEMES = {
+  aurora: {
+    hueStart: 120,
+    hueRange: 200,
+    saturation: 90,
+    lightness: 62,
+    bg: "5, 5, 8",
+    trailAlpha: 0.06,
+  },
+  ember: {
+    hueStart: 0,
+    hueRange: 55,
+    saturation: 95,
+    lightness: 58,
+    bg: "8, 4, 2",
+    trailAlpha: 0.07,
+  },
+  ocean: {
+    hueStart: 180,
+    hueRange: 90,
+    saturation: 88,
+    lightness: 60,
+    bg: "2, 6, 10",
+    trailAlpha: 0.06,
+  },
+};
+
+// ─── Noise / vector-field ─────────────────────────────────────────────────────
+
+/**
+ * Smooth organic 2D noise via a multi-octave trigonometric series.
+ * Returns an angle in radians that evolves continuously with time `t`.
+ */
+function fieldAngle(x, y, t) {
+  const s = 0.0025;
+  return (
+    Math.sin(x * s + t * 0.0007) * Math.PI +
+    Math.cos(y * s + t * 0.0005) * Math.PI +
+    Math.sin((x + y) * s * 0.6 + t * 0.0009) * Math.PI * 0.6 +
+    Math.cos((x - y) * s * 0.4 + t * 0.0006) * Math.PI * 0.4
+  );
+}
+
+// ─── Default hero content ─────────────────────────────────────────────────────
+
+function DefaultContent() {
+  // Single source of truth for the headline size: scales down to ~1.75rem on
+  // 320px screens and caps at 6.25rem on large displays.
+  const headlineSize = "clamp(1.75rem, 7vw, 6.25rem)";
+
+  // Shared DepthText config so both lines stay perfectly in sync.
+  const depthTextProps = {
+    layers: 40,
+    depth: 2.8,
+    faceColor: "#dfe3ed",
+    depthColor: "#000000",
+    tilt: 10,
+    pointerTracking: true,
+    smoothing: 0.12,
+    perspective: 900,
+    autoOrbit: true,
+    orbitSpeed: 0.3,
+    fontSize: headlineSize,
+    fontWeight: 700,
+    shadow: true,
+  };
 
   return (
-    <section className="relative w-full min-h-screen  bg-transparent text-white flex items-center justify-center px-4 sm:px-8 lg:px-16 pt-24 pb-12 lg:py-0 overflow-hidden">
-      
-      {/* Animations */}
-      <style>{`
-        /* Smooth Spreading Ambient Glow */
-        @keyframes spreadGlow {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(0.9);
-          }
-          50% {
-            opacity: 0.6;
-            transform: scale(1.15);
-          }
-        }
+    <div className="relative z-10 flex w-full flex-col items-center justify-center gap-5 px-5 text-center sm:gap-6 sm:px-8 lg:gap-8 lg:px-10">
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="flex w-full max-w-[min(1400px,92vw)] flex-col items-center"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.9, delay: 0.38, ease: [0.22, 0.61, 0.36, 1] }}
+      >
+        <DepthText text="Digital Solutions" {...depthTextProps} />
+        <DepthText text="That Deliver Results" {...depthTextProps} />
+      </motion.div>
 
-        /* Disarranged Floating Shift */
-        @keyframes rayShift {
-          0%, 100% {
-            opacity: 0.15;
-            transform: rotate(var(--ray-angle)) translateY(-15px) scaleY(0.95);
-          }
-          50% {
-            opacity: 0.85;
-            transform: rotate(var(--ray-angle)) translateY(20px) scaleY(1.05);
-          }
-        }
-
-        .animate-spread-glow {
-          animation: spreadGlow 8s ease-in-out infinite;
-        }
-
-        .animate-ray {
-          animation: rayShift ease-in-out infinite;
-        }
-      `}</style>
-
-      {/* Main Grid Container */}
-      <div className="max-w-8xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center z-10">
-        
-        {/* LEFT COLUMN: TEXT CONTENT */}
-        <div className="flex flex-col items-start space-y-6 text-left">
-          
-          <div className="flex flex-col space-y-2">
-            <span className="text-blue-500 tracking-widest text-xs sm:text-sm font-bold uppercase">
-  WE BUILD
-</span>
-
-<div className="w-10 h-[2px] bg-blue-600 rounded-full" />
-          </div>
-<h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] uppercase">
-  Digital Solutions <br />
-  That <span className="text-blue-600">Deliver Results</span>
-</h1>
-
-          <p className="text-zinc-400 text-sm sm:text-base max-w-lg font-normal leading-relaxed">
-            We design, develop and deliver powerful digital solutions 
-            to help startups and businesses grow, scale and succeed 
-            in the modern world.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-2 w-full sm:w-auto">
-            <a
-  href="#project"
-  className="w-full sm:w-auto text-center px-7 py-3.5
-  bg-blue-600 hover:bg-blue-700
-  text-white font-semibold text-xs tracking-wider uppercase
-  rounded-md transition-all duration-300
-  shadow-lg shadow-blue-600/25
-  flex items-center justify-center gap-2 group"
+     <motion.div
+  animate={{ opacity: 1, y: 0 }}
+  initial={{ opacity: 0, y: 16 }}
+  transition={{
+    duration: 0.9,
+    delay: 0.56,
+    ease: "easeOut",
+  }}
+  className="mx-auto max-w-[60ch]"
 >
-  START A PROJECT
-  <span className="group-hover:translate-x-1 transition-transform">
-    →
-  </span>
-</a>
-
-            <a
-  href="#video"
-  className="w-full sm:w-auto text-center px-7 py-3.5
-  border border-zinc-800 hover:border-blue-600
-  text-white font-semibold text-xs tracking-wider uppercase
-  rounded-md transition-all duration-200
-  flex items-center justify-center gap-2
-  bg-black/40 backdrop-blur-md"
->
-  <svg
-    className="w-4 h-4 fill-current text-blue-500"
-    viewBox="0 0 24 24"
-  >
-    <path d="M8 5v14l11-7z" />
-  </svg>
-
-  WATCH VIDEO
-</a>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: VISUAL DISPLAY */}
-        <div className="relative w-full flex items-center justify-center min-h-[380px] sm:min-h-[480px]">
-          
-          {/* FIXED: Smooth Spreading Radial Glows without visible circle borders */}
-          <div
-  className="absolute w-[300px] sm:w-[450px]
-  h-[300px] sm:h-[450px]
-  bg-blue-600/20 rounded-full
-  blur-[100px] sm:blur-[130px]
-  animate-spread-glow pointer-events-none"
+<TextType
+  text="We turn ideas into powerful digital products that help businesses grow, scale, and succeed."
+  typingSpeed={30}
+  pauseDuration={3000}
+  loop={false}
+  showCursor={true}
+  cursorCharacter="|"
+  cursorClassName="text-emerald-300"
+  className="text-[clamp(0.9rem,1.4vw,1.25rem)] leading-relaxed text-white/70"
 />
-
-<div
-  className="absolute w-[180px] sm:w-[280px]
-  h-[180px] sm:h-[280px]
-  bg-blue-500/30 rounded-full
-  blur-[70px] sm:blur-[100px]
-  animate-spread-glow pointer-events-none"
-  style={{ animationDelay: '3s' }}
-/>
-
-          {/* DISARRANGED LASER RAYS */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {laserRays.map((ray, index) => (
-              <div
-                key={index}
-                className="animate-ray absolute"
-                style={{
-                  left: ray.left,
-                  top: ray.top,
-                  width: ray.width,
-                  height: ray.height,
-                  '--ray-angle': ray.angle,
-                  transformOrigin: 'top center',
-                  transform: `rotate(${ray.angle})`,
-                  background: `linear-gradient(
-  180deg,
-  transparent,
-  rgba(59, 130, 246, ${ray.opacity}),
-  transparent
-)`,
-                  animationDuration: ray.speed,
-                  animationDelay: ray.delay,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Pedestal Base Soft Blur */}
-          <div className="absolute bottom-2 sm:bottom-4 w-[280px] sm:w-[420px] h-[80px] bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-
-          {/* Center Visual/Logo Image */}
-          <img
-  src="/q-logoo.png"
-  alt="Hero Visual"
-  className="relative z-10 w-full max-w-[320px] sm:max-w-[550px] lg:max-w-[800px]
-  h-auto object-contain
-  drop-shadow-[0_20px_40px_rgba(37,99,235,0.45)]
-  transition-transform duration-500"
-/>
-
-        </div>
-
-      </div>
-    </section>
+</motion.div>
+    </div>
   );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export default function HomeHero({
+  className,
+  children,
+  theme = "aurora",
+  density = "medium",
+}) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const cfg = THEMES[theme];
+    const count = PARTICLE_COUNTS[density];
+    const dpr = window.devicePixelRatio ?? 1;
+
+    let width = 0;
+    let height = 0;
+    let animId = 0;
+    let time = 0;
+    let particles = [];
+
+    const spawnParticle = () => {
+      const maxLife = 200 + Math.floor(Math.random() * 300);
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        speed: 1.1 + Math.random() * 1.8,
+        hue: cfg.hueStart + Math.random() * cfg.hueRange,
+        life: Math.floor(Math.random() * maxLife),
+        maxLife,
+      };
+    };
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      // Fill dark base on resize
+      ctx.fillStyle = `rgb(${cfg.bg})`;
+      ctx.fillRect(0, 0, width, height);
+
+      // Re-seed particles spread across the canvas
+      particles = Array.from({ length: count }, spawnParticle);
+    };
+
+    const render = () => {
+      time++;
+
+      // Fade previous frame — each dot persists ~16 frames, creating soft trails
+      ctx.fillStyle = `rgba(${cfg.bg}, ${cfg.trailAlpha})`;
+      ctx.fillRect(0, 0, width, height);
+
+      for (const p of particles) {
+        const angle = fieldAngle(p.x, p.y, time);
+
+        p.x += Math.cos(angle) * p.speed;
+        p.y += Math.sin(angle) * p.speed;
+        p.life++;
+
+        // Respawn aged-out particles at a random position
+        if (p.life > p.maxLife) {
+          p.x = Math.random() * width;
+          p.y = Math.random() * height;
+          p.life = 0;
+          p.hue = cfg.hueStart + Math.random() * cfg.hueRange;
+          continue;
+        }
+
+        // Wrap edges
+        if (p.x < 0) p.x += width;
+        else if (p.x > width) p.x -= width;
+        if (p.y < 0) p.y += height;
+        else if (p.y > height) p.y -= height;
+
+        // Fade in / out over particle lifetime
+        const progress = p.life / p.maxLife;
+        const fadeIn = Math.min(progress * 8, 1);
+        const fadeOut = Math.min((1 - progress) * 6, 1);
+        const alpha = fadeIn * fadeOut * 0.9;
+
+        // Hue shifts subtly with field direction for color variety
+        const hueMod = (p.hue + (angle / (Math.PI * 2)) * 70 + 360) % 360;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hueMod}, ${cfg.saturation}%, ${cfg.lightness}%, ${alpha})`;
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, [theme, density]);
+
+  const bgColor = THEMES[theme].bg;
+
+ return (
+  <div
+    className={cn(
+      "relative flex min-h-screen w-full items-center justify-center overflow-hidden",
+      className
+    )}
+    style={{ background: `rgb(${bgColor})` }}
+  >
+    <canvas
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 h-full w-full"
+      ref={canvasRef}
+    />
+
+    {/* Radial vignette — focuses center, dims edges */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background: `radial-gradient(
+          ellipse 65% 60% at 50% 50%,
+          transparent 20%,
+          rgba(${bgColor}, 0.92) 100%
+        )`,
+      }}
+    />
+
+    {/* Soft top fade */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 h-40"
+      style={{
+        background: `linear-gradient(
+          to bottom,
+          rgb(${bgColor}),
+          transparent
+        )`,
+      }}
+    />
+
+    {/* Soft bottom fade */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
+      style={{
+        background: `linear-gradient(
+          to top,
+          rgb(${bgColor}),
+          transparent
+        )`,
+      }}
+    />
+
+    {/* Content */}
+    {children ?? <DefaultContent />}
+  </div>
+);
 }
