@@ -19,6 +19,7 @@ function Home() {
    <RecentProjects/>
    <CallToAction/>
     
+   
     </div>
   );
 }
