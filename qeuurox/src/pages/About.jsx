@@ -13,7 +13,7 @@ function About() {
   return (
     <>
     
-   <AboutHero/>
+  <AboutHero/>
     <OurStory/>
     <OurValues/>
     <MeetOurTeam/>
