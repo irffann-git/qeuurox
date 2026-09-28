@@ -1,5 +1,5 @@
 import React from "react";
-import Lightfall from "@/components/Lightfall";
+import Lightfall from "../components/Lightfall";
 
 export default function OurHerooo() {
   return (
