@@ -1,7 +1,8 @@
 
 
 
-import AboutHero from "../components/About/aboutHero";
+
+import AboutHero from "@/components/About/aboutHero";
 import MeetOurTeam from "../components/About/MeetOurTeam";
 import OurStory from "../components/About/OurStory";
 import OurValues from "../components/About/OurValues";
@@ -12,7 +13,7 @@ function About() {
   return (
     <>
     
-    <AboutHero/>
+   <AboutHero/>
     <OurStory/>
     <OurValues/>
     <MeetOurTeam/>
