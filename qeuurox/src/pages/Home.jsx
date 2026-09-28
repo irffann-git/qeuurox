@@ -11,7 +11,7 @@ import WhyChooseUs from "../components/Home/WhyChooseUs";
 function Home() {
   return (
     <div>
-      <HomeHero/>
+   <HomeHero/>
    <StatsSection/>
    <ServicesSection/>
    <WhyChooseUs/>
