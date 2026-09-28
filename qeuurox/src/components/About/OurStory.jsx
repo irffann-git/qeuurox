@@ -7,28 +7,28 @@ import TextType from '../TextType';
 
 const timelineSteps = [
   {
-    year: '2019',
+    year: '2023',
     title: 'The Beginning',
     description:
       'qeuurox was founded with a simple belief — technology can solve real problems.',
     icon: Rocket,
   },
   {
-    year: '2021',
+    year: '2024',
     title: 'Growth & Expansion',
     description:
       'Expanded our team and services globally to deliver end-to-end digital solutions.',
     icon: Code,
   },
   {
-    year: '2023',
+    year: '2025',
     title: 'Building Trust',
     description:
       'Partnered with amazing clients and delivered solutions that drive measurable results.',
     icon: Users,
   },
   {
-    year: '2024+',
+    year: '2026+',
     title: 'The Future',
     description:
       'Continuing our mission to create innovative solutions that make a real impact.',
@@ -79,7 +79,7 @@ const OurStory2 = () => {
   }, []);
 
   return (
-    <section className="bg-[#020617] text-white py-24 px-6 sm:px-10 lg:px-16 min-h-screen flex items-center overflow-hidden relative">
+    <section id="story" className="bg-[#020617] text-white py-24 px-6 sm:px-10 lg:px-16 min-h-screen flex items-center overflow-hidden relative">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
