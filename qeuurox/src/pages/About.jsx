@@ -4,7 +4,7 @@
 
 
 
-import AboutHero from "@/components/About/AboutHero";
+import AboutHero from "../components/About/AboutHero";
 import MeetOurTeam from "../components/About/MeetOurTeam";
 import OurStory from "../components/About/OurStory";
 import OurValues from "../components/About/OurValues";
