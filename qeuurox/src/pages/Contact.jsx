@@ -1,4 +1,4 @@
-import ContactHero from '@/components/Contact/ContactHero'
+import ContactHero from '../components/Contact/ContactHero'
 import React from 'react'
 
 function Contact() {

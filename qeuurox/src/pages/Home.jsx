@@ -1,4 +1,4 @@
-import HomeHero from "@/components/Home/HeroSection";
+import HomeHero from "../components/Home/HeroSection";
 import CallToAction from "../components/Home/CallToAction";
 
 import RecentProjects from "../components/Home/RecentProjects";
