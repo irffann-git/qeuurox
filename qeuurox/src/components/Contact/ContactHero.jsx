@@ -30,35 +30,35 @@ function cn(...classes) {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const PARTICLE_COUNTS = {
-  sparse: 600,
-  medium: 1200,
-  dense: 2000,
+  sparse: 450,
+  medium: 800,
+  dense: 1300,
 };
 
 const THEMES = {
   aurora: {
     hueStart: 120,
     hueRange: 200,
-    saturation: 90,
-    lightness: 62,
-    bg: "5, 5, 8",
-    trailAlpha: 0.06,
+    saturation: 75,
+    lightness: 52,
+    bg: "3, 7, 18",
+    trailAlpha: 0.08,
   },
   ember: {
     hueStart: 0,
     hueRange: 55,
-    saturation: 95,
-    lightness: 58,
-    bg: "8, 4, 2",
-    trailAlpha: 0.07,
+    saturation: 80,
+    lightness: 50,
+    bg: "6, 4, 10",
+    trailAlpha: 0.08,
   },
   ocean: {
     hueStart: 180,
     hueRange: 90,
-    saturation: 88,
-    lightness: 60,
-    bg: "2, 6, 10",
-    trailAlpha: 0.06,
+    saturation: 75,
+    lightness: 50,
+    bg: "3, 7, 18",
+    trailAlpha: 0.08,
   },
 };
 
@@ -146,6 +146,7 @@ export default function ContactHero({
   children,
   theme = "aurora",
   density = "medium",
+  opacity = 0.4,
 }) {
   const canvasRef = useRef(null);
 
@@ -167,11 +168,11 @@ export default function ContactHero({
     let particles = [];
 
     const spawnParticle = () => {
-      const maxLife = 200 + Math.floor(Math.random() * 300);
+      const maxLife = 220 + Math.floor(Math.random() * 300);
       return {
         x: Math.random() * width,
         y: Math.random() * height,
-        speed: 1.1 + Math.random() * 1.8,
+        speed: 0.55 + Math.random() * 0.85,
         hue: cfg.hueStart + Math.random() * cfg.hueRange,
         life: Math.floor(Math.random() * maxLife),
         maxLife,
@@ -229,7 +230,7 @@ export default function ContactHero({
         const progress = p.life / p.maxLife;
         const fadeIn = Math.min(progress * 8, 1);
         const fadeOut = Math.min((1 - progress) * 6, 1);
-        const alpha = fadeIn * fadeOut * 0.9;
+        const alpha = fadeIn * fadeOut * 0.55;
 
         // Hue shifts subtly with field direction for color variety
         const hueMod = (p.hue + (angle / (Math.PI * 2)) * 70 + 360) % 360;
@@ -266,6 +267,7 @@ export default function ContactHero({
     <canvas
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 h-full w-full"
+      style={{ opacity }}
       ref={canvasRef}
     />
 
@@ -277,7 +279,7 @@ export default function ContactHero({
         background: `radial-gradient(
           ellipse 65% 60% at 50% 50%,
           transparent 20%,
-          rgba(${bgColor}, 0.92) 100%
+          rgba(${bgColor}, 0.95) 100%
         )`,
       }}
     />
